@@ -1,0 +1,58 @@
+/* Custom Styles for Volcano Stake */
+
+.gradient-bg {
+    background: linear-gradient(135deg, #6b21a8, #1e1b4b);
+}
+
+@keyframes lavaFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.lava-text {
+    background: linear-gradient(90deg, #8b5cf6, #6b21a8, #4c1d95);
+    background-size: 200% auto;
+    animation: lavaFlow 3s linear infinite;
+}
+
+.staking-card {
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.staking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(107, 33, 168, 0.3);
+}
+
+.progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #6e8efb, #a777e3);
+    transition: width 0.5s ease;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+.address-content.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

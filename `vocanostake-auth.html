@@ -1,0 +1,495 @@
+`vocanostake-auth.html`
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOCANOSTAKE - Register & Login</title>
+    <style>
+        :root {
+            --primary: #6a0dad;
+            --primary-light: #9c27b0;
+            --primary-dark: #4a148c;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+            --dark-gray: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray);
+            color: var(--dark-gray);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            margin-right: 0.75rem;
+            fill: var(--white);
+            width: 40px;
+            height: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .auth-header {
+            display: flex;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .auth-tab:hover:not(.active) {
+            background-color: rgba(106, 13, 173, 0.05);
+        }
+
+        .auth-form-container {
+            padding: 2rem;
+        }
+
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.2);
+        }
+
+        .form-group .show-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .auth-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            background-color: var(--white);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background-color: var(--gray);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .message {
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--dark-gray);
+            color: var(--white);
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                max-width: 100%;
+                margin: 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L4 8v8l8 6 8-6V8L12 2zm0 14.5L6 10v4.5l6 4.5 6-4.5V10l-6 6.5z" fill-rule="evenodd"/>
+            </svg>
+            VOCANOSTAKE
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-tab active" data-tab="login">Login</div>
+                <div class="auth-tab" data-tab="register">Register</div>
+            </div>
+
+            <div class="auth-form-container">
+                <div class="message" id="status-message"></div>
+
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="Enter your password">
+                        <span class="show-password" data-target="login-password">Show</span>
+                    </div>
+                    <button type="submit" class="auth-btn">Login</button>
+                    <div class="auth-footer">
+                        <a href="#" id="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <div class="divider">OR</div>
+
+                    <div class="social-login">
+                        <button type="button" class="social-btn">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b0c61af3-4d9b-4175-a2aa-0f3109a4bf79.png" alt="Google logo" class="social-icon" />
+                            Continue with Google
+                        </button>
+                        <button type="button" class="social-btn">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1858d40c-7eb8-4358-b45d-8e843da12dab.png" alt="Facebook logo" class="social-icon" />
+                            Continue with Facebook
+                        </button>
+                    </div>
+                </form>
+
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required placeholder="Create a password">
+                        <span class="show-password" data-target="register-password">Show</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" required placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="auth-btn">Create Account</button>
+
+                    <div class="auth-footer">
+                        Already have an account? <a href="#" id="show-login">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2023 VOCANOSTAKE. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active form
+                    forms.forEach(form => form.classList.remove('active'));
+                    document.getElementById(tabId + '-form').classList.add('active');
+
+                    // Clear any messages
+                    document.getElementById('status-message').className = 'message';
+                    document.getElementById('status-message').textContent = '';
+                });
+            });
+
+            // Show password toggle
+            document.querySelectorAll('.show-password').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.textContent = 'Hide';
+                    } else {
+                        input.type = 'password';
+                        this.textContent = 'Show';
+                    }
+                });
+            });
+
+            // Form switching links
+            document.getElementById('show-login').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.auth-tab[data-tab="login"]').click();
+            });
+
+            document.getElementById('forgot-password').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('status-message').className = 'message success';
+                document.getElementById('status-message').textContent = 'Password reset link has been sent to your email.';
+            });
+
+            // Form validation and submission
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('register-name').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm').value;
+
+                if (password !== confirmPassword) {
+                    document.getElementById('status-message').className = 'message error';
+                    document.getElementById('status-message').textContent = 'Passwords do not match!';
+                    return;
+                }
+
+                if (password.length < 8) {
+                    document.getElementById('status-message').className = 'message error';
+                    document.getElementById('status-message').textContent = 'Password must be at least 8 characters!';
+                    return;
+                }
+
+                // In a real app, you would send this to your server
+                document.getElementById('status-message').className = 'message success';
+                document.getElementById('status-message').textContent = 'Registration successful!';
+
+                // Reset form
+                this.reset();
+                
+                // Switch to login tab after registration
+                setTimeout(() => {
+                    document.querySelector('.auth-tab[data-tab="login"]').click();
+                }, 2000);
+            });
+
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+
+                // In a real app, you would validate and send to your server
+                document.getElementById('status-message').className = 'message success';
+                document.getElementById('status-message').textContent = 'Login successful! Redirecting...';
+                
+                // Reset form
+                this.reset();
+                
+                // In a real app, you would redirect or update UI here
+                setTimeout(() => {
+                    document.getElementById('status-message').className = 'message';
+                    document.getElementById('status-message').textContent = '';
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
+
+```
+
